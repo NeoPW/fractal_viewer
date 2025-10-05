@@ -14,9 +14,9 @@ class ControlsWidget(QWidget):
 
 
         self.iter_slider = QSlider(Qt.Horizontal)
-        self.iter_slider.setMinimum(10)
-        self.iter_slider.setMaximum(1000)
-        self.iter_slider.setValue(14)
+        self.iter_slider.setMinimum(1)
+        self.iter_slider.setMaximum(20)
+        self.iter_slider.setValue(5)
 
         self.iter_label = QLabel(f"Iterations: {self.iter_slider.value()}")
         self.iter_slider.valueChanged.connect(lambda v: self.iter_label.setText(f"Iterations: {v}"))

@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy
 from .canvas import FractalCanvas
 from .controls import ControlsWidget
 from .workers import FractalWorker
@@ -56,6 +56,10 @@ class MainWindow(QMainWindow):
             self.canvas.deleteLater()
 
         self.canvas = create_fractal(name, self.controls.iter_slider.value())
+        self.canvas.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding
+        )
 
         self.layout.addWidget(self.canvas)
         self.canvas.show()
