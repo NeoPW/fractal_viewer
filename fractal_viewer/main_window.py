@@ -4,6 +4,8 @@ from .controls import ControlsWidget
 from .workers import FractalWorker
 from PySide6.QtCore import QThreadPool
 from .algorithms.fractal_utils import Fractals
+from .geo_fractal_canvas import GeoFractalCanvas
+from .algorithms.koch import Koch
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -12,9 +14,9 @@ class MainWindow(QMainWindow):
 
         central = QWidget()
         self.setCentralWidget(central)
-        layout = QVBoxLayout(central)
+        self.layout = QVBoxLayout(central)
 
-        self.__add_ui_components__(self, layout)
+        self.__add_ui_components__()
 
         self.pool = QThreadPool.globalInstance()
 
@@ -38,12 +40,28 @@ class MainWindow(QMainWindow):
         self.controls.render_btn.setEnabled(True)
         self.controls.render_btn.setText("Render")
 
-    def __add_ui_components__(self, layout: QVBoxLayout):
+    def __add_ui_components__(self):
         self.controls = ControlsWidget()
-        self.canvas = FractalCanvas()
+        self.controls.fractal_combo.currentTextChanged.connect(self.on_fractal_change)
+        # self.canvas = FractalCanvas()
+        self.canvas = None
+        self.on_fractal_change("Mandelbrot")
 
-        layout.addWidget(self.controls)
-        layout.addWidget(self.canvas)
+        self.layout.addWidget(self.controls)
+        self.layout.addWidget(self.canvas)
+
+    def on_fractal_change(self, name: str):
+        if self.canvas:
+            self.canvas.setParent(None)
+            self.canvas.deleteLater()
+            
+        if name == "Mandelbrot":
+            self.canvas = FractalCanvas()
+        elif name == "Koch":
+            self.canvas = GeoFractalCanvas(Koch())
+
+        self.layout.addWidget(self.canvas)
+        self.canvas.show()
 
     def __connect_buttons__(self):
         self.controls.render_btn.clicked.connect(self.start_render)
