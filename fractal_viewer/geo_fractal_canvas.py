@@ -1,8 +1,9 @@
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QTimer, Qt
 from PySide6.QtGui import QPainter, QPen
+from .canvas import FractalCanvas
 
-class GeoFractalCanvas(QWidget):
+class GeoFractalCanvas(FractalCanvas):
     def __init__(self, generator=None, max_depth=5, step_delay=1000):
         
         super().__init__()
@@ -16,10 +17,23 @@ class GeoFractalCanvas(QWidget):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self._animate)
-        self.timer.start(self.step_delay)
 
     def setGenerator(self, generator):
         self.generator = generator
+
+    def setDepth(self, depth):
+        self.max_depth = depth
+
+    def startRendering(self):
+        self.timer.start(self.step_delay)
+
+    def stopRendering(self):
+        self.timer.stop()
+
+    def reset(self):
+        self.timer.stop()
+        self.current_step = 0
+        # reset generator
 
     def _animate(self):
 

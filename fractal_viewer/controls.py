@@ -16,14 +16,19 @@ class ControlsWidget(QWidget):
         self.iter_slider = QSlider(Qt.Horizontal)
         self.iter_slider.setMinimum(10)
         self.iter_slider.setMaximum(1000)
-        self.iter_slider.setValue(200)
+        self.iter_slider.setValue(14)
 
         self.iter_label = QLabel(f"Iterations: {self.iter_slider.value()}")
         self.iter_slider.valueChanged.connect(lambda v: self.iter_label.setText(f"Iterations: {v}"))
 
-        self.render_btn = QPushButton("Render")
+        self.startButton = QPushButton("Start")
+        self.stopButton = QPushButton("Stop")
+        self.resetButton = QPushButton("Reset")
 
         layout.addWidget(self.fractal_combo)
         layout.addWidget(self.iter_label)
         layout.addWidget(self.iter_slider)
-        layout.addWidget(self.render_btn)
+        layout.addWidget(self.startButton)
+        layout.addWidget(self.stopButton)
+        layout.addWidget(self.resetButton)
+

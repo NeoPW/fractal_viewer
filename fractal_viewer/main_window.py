@@ -6,6 +6,7 @@ from PySide6.QtCore import QThreadPool
 from .algorithms.fractal_utils import Fractals
 from .geo_fractal_canvas import GeoFractalCanvas
 from .algorithms.koch import Koch
+from .fractal_factory import create_fractal
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -15,53 +16,57 @@ class MainWindow(QMainWindow):
         central = QWidget()
         self.setCentralWidget(central)
         self.layout = QVBoxLayout(central)
+        self.canvas: FractalCanvas = FractalCanvas()
 
         self.__add_ui_components__()
-
-        self.pool = QThreadPool.globalInstance()
-
         self.__connect_buttons__()
 
-    def start_render(self):
-        fractal_type = self.controls.fractal_combo.currentText()
-        iterations = self.controls.iter_slider.value()
-        width = max(320, self.canvas.width())
-        height = max(240, self.canvas.height())
+    def start(self):
+        self.canvas.startRendering()
+        self.controls.startButton.setEnabled(False)
+        self.controls.stopButton.setEnabled(True)
+        self.controls.resetButton.setEnabled(False)
+        self.controls.iter_slider.setEnabled(False)
 
-        self.controls.render_btn.setEnabled(False)
-        self.controls.render_btn.setText("Rendering...")
+    def stop(self):
+        self.canvas.stopRendering()
+        self.controls.startButton.setEnabled(True)
+        self.controls.stopButton.setEnabled(False)
+        self.controls.resetButton.setEnabled(True)
+        self.controls.iter_slider.setEnabled(True)
 
-        worker = FractalWorker(width, height, fractal_type, iterations)
-        worker.signals.finished.connect(self._on_render_finished)
-        self.pool.start(worker)
+    def reset(self):
+        self.canvas.reset()
 
-    def _on_render_finished(self, qimage):
-        self.canvas.set_image(qimage)
-        self.controls.render_btn.setEnabled(True)
-        self.controls.render_btn.setText("Render")
+    def setDepth(self):
+        self.canvas.setDepth(self.controls.iter_slider.value())
 
     def __add_ui_components__(self):
         self.controls = ControlsWidget()
-        self.controls.fractal_combo.currentTextChanged.connect(self.on_fractal_change)
-        # self.canvas = FractalCanvas()
+        self.controls.fractal_combo.currentTextChanged.connect(self.__on_fractal_change__)
         self.canvas = None
-        self.on_fractal_change("Mandelbrot")
+        self.__on_fractal_change__(Fractals.KOCH.value)
 
         self.layout.addWidget(self.controls)
         self.layout.addWidget(self.canvas)
 
-    def on_fractal_change(self, name: str):
+    def __on_fractal_change__(self, name: str):
         if self.canvas:
             self.canvas.setParent(None)
             self.canvas.deleteLater()
-            
-        if name == "Mandelbrot":
-            self.canvas = FractalCanvas()
-        elif name == "Koch":
-            self.canvas = GeoFractalCanvas(Koch())
+
+        self.canvas = create_fractal(name, self.controls.iter_slider.value())
 
         self.layout.addWidget(self.canvas)
         self.canvas.show()
 
     def __connect_buttons__(self):
-        self.controls.render_btn.clicked.connect(self.start_render)
+        self.controls.startButton.clicked.connect(self.start)
+        self.controls.stopButton.clicked.connect(self.stop)
+        self.controls.resetButton.clicked.connect(self.reset)
+        self.controls.startButton.setEnabled(True)
+        self.controls.stopButton.setEnabled(False)
+        self.controls.resetButton.setEnabled(True)
+
+        self.controls.iter_slider.setEnabled(True)
+        self.controls.iter_slider.valueChanged.connect(self.setDepth)
