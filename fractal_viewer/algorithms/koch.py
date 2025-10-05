@@ -5,7 +5,6 @@ class Koch():
     def __init__(self, start: list[Line] = None):
         self.start = start
         self.last = None
-        self.ROT_ANGLE = math.radians(-60)
 
     def setStartingPointFromSize(self, width: int, height: int):
         self.start = [Line(Point(0, height-100), Point(width, height-100))]
@@ -36,8 +35,8 @@ class Koch():
         koch_lines.append(Line(p2, line.b))
 
         c : Point = Point(None, None)
-        c.x = p1.x + (p2.x - p1.x) * math.cos(self.ROT_ANGLE) - (p2.y - p1.y) * math.sin(self.ROT_ANGLE)
-        c.y = p1.y + (p2.x - p1.x) * math.sin(self.ROT_ANGLE) + (p2.y - p1.y) * math.cos(self.ROT_ANGLE)
+        c.x = math.floor((p2.x + p1.x + math.sqrt(3) * (p2.y - p1.y)) / 2)
+        c.y = math.floor((p2.y + p1.y - math.sqrt(3) * (p2.x - p1.x)) / 2)        
         koch_lines.append(Line(p1, c))
         koch_lines.append(Line(c, p2))
 

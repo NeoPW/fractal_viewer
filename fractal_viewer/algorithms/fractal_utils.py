@@ -12,11 +12,5 @@ class Point():
 
 class Line():
     def __init__(self, a: Point, b: Point):
-
-        # order points left to right
-        if(a.x < b.x or (a.x == b.x and a.y < b.y) ):
-            self.a = a
-            self.b = b
-        else:
-            self.a = b
-            self.b = a
+        self.a = a
+        self.b = b
