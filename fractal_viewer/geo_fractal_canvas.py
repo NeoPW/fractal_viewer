@@ -13,7 +13,7 @@ class GeoFractalCanvas(FractalCanvas):
         self.current_step = 0
         self.lines = []
 
-        self.color = Qt.GlobalColor.blue
+        self.color = Qt.GlobalColor.white
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self._animate)
