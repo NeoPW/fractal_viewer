@@ -5,6 +5,7 @@ class Fractals(Enum):
     KOCH = 'Koch'
     JULIA = 'Julia'
     SIERPINSKI = 'Sierpinski'
+    PLANT = 'Plant'
 
 class Point():
     def __init__(self, x: int, y: int):

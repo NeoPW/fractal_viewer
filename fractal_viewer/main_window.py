@@ -16,6 +16,7 @@ class MainWindow(QMainWindow):
         central = QWidget()
         self.setCentralWidget(central)
         self.layout = QVBoxLayout(central)
+        self.showMaximized()
         self.canvas: FractalCanvas = FractalCanvas()
 
         self.__add_ui_components__()
@@ -45,7 +46,7 @@ class MainWindow(QMainWindow):
         self.controls = ControlsWidget()
         self.controls.fractal_combo.currentTextChanged.connect(self.__on_fractal_change__)
         self.canvas = None
-        self.__on_fractal_change__(Fractals.KOCH.value)
+        self.__on_fractal_change__(Fractals.PLANT.value)
 
         self.layout.addWidget(self.controls)
         self.layout.addWidget(self.canvas)

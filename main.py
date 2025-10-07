@@ -11,7 +11,7 @@ if __name__ == "__main__":
     apply_stylesheet(app, theme="dark_teal.xml")
 
     window = MainWindow()
-    window.resize(1280, 720)
+    window.resize(1640, 1280)
     window.show()
 
     sys.exit(app.exec())

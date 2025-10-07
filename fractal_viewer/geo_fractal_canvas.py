@@ -4,7 +4,7 @@ from PySide6.QtGui import QPainter, QPen
 from .canvas import FractalCanvas
 
 class GeoFractalCanvas(FractalCanvas):
-    def __init__(self, generator=None, max_depth=5, step_delay=1000):
+    def __init__(self, generator=None, max_depth=5, step_delay=5):
         
         super().__init__()
         self.setGenerator(generator)
@@ -42,7 +42,7 @@ class GeoFractalCanvas(FractalCanvas):
 
         if self.current_step < self.max_depth:
             self.current_step += 1
-            print(self.current_step)
+            # print(self.current_step)
             self.lines = self.generator.step()
             self.update()
         else:
